@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_shmr/ui/localization/s.dart';
+import 'package:todo_list_shmr/ui/utility/localization/s.dart';
 
 class UnknownScreen extends StatelessWidget {
   const UnknownScreen({super.key});

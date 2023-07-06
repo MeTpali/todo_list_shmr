@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:todo_list_shmr/logging/logging.dart';
-import 'package:todo_list_shmr/ui/widgets/task_form/date.dart';
-import 'package:todo_list_shmr/ui/widgets/task_row/task_row_widget.dart';
+import 'package:todo_list_shmr/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
+import 'package:todo_list_shmr/ui/utility/date.dart';
 
 class ApiClient {
   static const _token = 'preconvincing';
@@ -13,15 +13,21 @@ class ApiClient {
 
   Future<List<TaskWidgetConfiguration>> getTaskList() async {
     if (await checkInternet()) {
-      final response = await _dio.get(
-        '/list',
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $_token",
-          },
-        ),
-      );
-      if (response.data['status'] == 'ok') {
+      Response? response;
+      try {
+        response = await _dio.get(
+          '/list',
+          options: Options(
+            headers: {
+              "Authorization": "Bearer $_token",
+            },
+          ),
+        );
+      } catch (e) {
+        final log = logger(ApiClient);
+        log.e(e);
+      }
+      if (response != null && response.data['status'] == 'ok') {
         _revision = response.data['revision'];
         List<dynamic> newList = response.data['list'];
         List<TaskWidgetConfiguration> taskList = [];
@@ -83,31 +89,43 @@ class ApiClient {
           "last_updated_by": _deviceId,
         },
       };
-      final response = await _dio.post(
-        '/list',
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $_token",
-            "X-Last-Known-Revision": _revision,
-          },
-        ),
-        data: map,
-      );
-      _revision = response.data['revision'];
+      Response? response;
+      try {
+        response = await _dio.post(
+          '/list',
+          options: Options(
+            headers: {
+              "Authorization": "Bearer $_token",
+              "X-Last-Known-Revision": _revision,
+            },
+          ),
+          data: map,
+        );
+      } catch (e) {
+        final log = logger(ApiClient);
+        log.e(e);
+      }
+      _revision = response != null ? response.data['revision'] : 0;
     }
   }
 
   Future<TaskWidgetConfiguration?> getTask(String id) async {
     if (await checkInternet()) {
-      final response = await _dio.get(
-        '/list/$id',
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $_token",
-          },
-        ),
-      );
-      if (response.data['status'] == 'ok') {
+      Response? response;
+      try {
+        response = await _dio.get(
+          '/list/$id',
+          options: Options(
+            headers: {
+              "Authorization": "Bearer $_token",
+            },
+          ),
+        );
+      } catch (e) {
+        final log = logger(ApiClient);
+        log.e(e);
+      }
+      if (response != null && response.data['status'] == 'ok') {
         _revision = response.data['revision'];
         String? date;
         if (response.data['deadline'] != null) {
@@ -208,32 +226,44 @@ class ApiClient {
           "last_updated_by": _deviceId,
         },
       };
-      final response = await _dio.put(
-        '/list/${config.id}',
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $_token",
-            "X-Last-Known-Revision": _revision,
-          },
-        ),
-        data: map,
-      );
-      _revision = response.data['revision'];
+      Response? response;
+      try {
+        response = await _dio.put(
+          '/list/${config.id}',
+          options: Options(
+            headers: {
+              "Authorization": "Bearer $_token",
+              "X-Last-Known-Revision": _revision,
+            },
+          ),
+          data: map,
+        );
+      } catch (e) {
+        final log = logger(ApiClient);
+        log.e(e);
+      }
+      _revision = response != null ? response.data['revision'] : 0;
     }
   }
 
   Future<void> deleteTask(String id) async {
     if (await checkInternet()) {
-      final response = await _dio.delete(
-        '/list/$id',
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $_token",
-            "X-Last-Known-Revision": _revision,
-          },
-        ),
-      );
-      _revision = response.data['revision'];
+      Response? response;
+      try {
+        response = await _dio.delete(
+          '/list/$id',
+          options: Options(
+            headers: {
+              "Authorization": "Bearer $_token",
+              "X-Last-Known-Revision": _revision,
+            },
+          ),
+        );
+      } catch (e) {
+        final log = logger(ApiClient);
+        log.e(e);
+      }
+      _revision = response != null ? response.data['revision'] : 0;
     }
   }
 

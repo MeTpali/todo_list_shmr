@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:todo_list_shmr/core/task_repository.dart';
 import 'package:todo_list_shmr/navigation/navigation.dart';
-import 'package:todo_list_shmr/ui/localization/s.dart';
+import 'package:todo_list_shmr/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/ui/utility/localization/s.dart';
 import 'package:todo_list_shmr/ui/theme/theme.dart';
 import 'package:todo_list_shmr/ui/widgets/task_form/task_form_cubit.dart';
-import 'package:todo_list_shmr/ui/widgets/task_row/task_row_widget.dart';
 
 class TaskFormWidget extends StatelessWidget {
   final int? taskId;
@@ -30,19 +30,19 @@ class TaskFormWidget extends StatelessWidget {
                 isChanging: false,
               ),
       ),
-      child: const TaskFormBody(),
+      child: const _TaskFormBody(),
     );
   }
 }
 
-class TaskFormBody extends StatefulWidget {
-  const TaskFormBody({super.key});
+class _TaskFormBody extends StatefulWidget {
+  const _TaskFormBody();
 
   @override
-  State<TaskFormBody> createState() => _TaskFormBodyState();
+  State<_TaskFormBody> createState() => _TaskFormBodyState();
 }
 
-class _TaskFormBodyState extends State<TaskFormBody> {
+class _TaskFormBodyState extends State<_TaskFormBody> {
   double offset = 0;
   final _controller = ScrollController();
   @override
@@ -72,13 +72,6 @@ class _TaskFormBodyState extends State<TaskFormBody> {
         iconTheme: IconThemeData(color: ToDoListTheme.taskFormAppBarIconColor),
         backgroundColor: ToDoListTheme.taskFormAppBarColor,
         elevation: offset < 100 ? 4 * offset / 100 : 4,
-        // leading: IconButton(
-        //   icon: Icon(
-        //     Icons.clear,
-        //     color: ToDoListTheme.taskFormAppBarIconColor,
-        //   ),
-        //   onPressed: _pop,
-        // ),
         actions: [
           TextButton(
             onPressed: cubit.state.configuration.description.isNotEmpty
@@ -115,7 +108,7 @@ class _TaskFormBodyState extends State<TaskFormBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TaskFieldWidget(),
+                  const _TaskFieldWidget(),
                   const SizedBox(height: 28),
                   Text(
                     S.of(context).get("relevance"),
@@ -123,34 +116,30 @@ class _TaskFormBodyState extends State<TaskFormBody> {
                       color: ToDoListTheme.textColor,
                     ),
                   ),
-                  const RelevancePoPup(),
+                  const _RelevancePoPup(),
                   const Divider(height: 32),
-                  const DatePicker(),
+                  const _DatePicker(),
                 ],
               ),
             ),
             const Divider(height: 26),
-            const DeleteWidget(),
+            const _DeleteWidget(),
             const SizedBox(height: 45),
           ],
         ),
       ),
     );
   }
-
-  // void _pop() {
-  //   NavigationManager.instance.pop();
-  // }
 }
 
-class TaskFieldWidget extends StatefulWidget {
-  const TaskFieldWidget({super.key});
+class _TaskFieldWidget extends StatefulWidget {
+  const _TaskFieldWidget();
 
   @override
-  State<TaskFieldWidget> createState() => _TaskFieldWidgetState();
+  State<_TaskFieldWidget> createState() => _TaskFieldWidgetState();
 }
 
-class _TaskFieldWidgetState extends State<TaskFieldWidget> {
+class _TaskFieldWidgetState extends State<_TaskFieldWidget> {
   final textController = TextEditingController();
   @override
   void initState() {
@@ -201,8 +190,8 @@ class _TaskFieldWidgetState extends State<TaskFieldWidget> {
   }
 }
 
-class RelevancePoPup extends StatelessWidget {
-  const RelevancePoPup({super.key});
+class _RelevancePoPup extends StatelessWidget {
+  const _RelevancePoPup();
 
   @override
   Widget build(BuildContext context) {
@@ -306,8 +295,8 @@ class RelevancePoPup extends StatelessWidget {
   }
 }
 
-class DatePicker extends StatelessWidget {
-  const DatePicker({super.key});
+class _DatePicker extends StatelessWidget {
+  const _DatePicker();
 
   void _showDatePicker(BuildContext context) {
     showDatePicker(
@@ -400,8 +389,8 @@ class DatePicker extends StatelessWidget {
   }
 }
 
-class DeleteWidget extends StatelessWidget {
-  const DeleteWidget({super.key});
+class _DeleteWidget extends StatelessWidget {
+  const _DeleteWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -412,7 +401,6 @@ class DeleteWidget extends StatelessWidget {
       child: TextButton(
         onPressed: cubit.state.isChanging
             ? () {
-                print(cubit.state.configuration.id);
                 bloc.add(TaskListDeleteTask(id: cubit.state.configuration.id));
                 GetIt.I<NavigationManager>().openMainScreen();
               }

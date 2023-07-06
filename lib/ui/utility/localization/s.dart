@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:todo_list_shmr/logging/logging.dart';
+import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
 
 class S {
   final log = logger(S);

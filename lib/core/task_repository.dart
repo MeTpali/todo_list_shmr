@@ -1,9 +1,10 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:todo_list_shmr/db/database_helper.dart';
-import 'package:todo_list_shmr/domain/api_client/api_client.dart';
-import 'package:todo_list_shmr/ui/widgets/task_row/task_row_widget.dart';
+import 'package:todo_list_shmr/domain/database_helper.dart';
+import 'package:todo_list_shmr/domain/api_client.dart';
+import 'package:todo_list_shmr/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
 
 abstract class TaskListEvent {}
 
@@ -107,6 +108,8 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     TaskListUpdate event,
     Emitter<TaskListState> emit,
   ) async {
+    final log = logger(TaskListBloc);
+    log.i('TaskListUpdate event');
     final clientList = await _client.getTaskList();
     await _databaseHelper.initializeDatabase();
     final dbList = await _databaseHelper.getTaskList();
@@ -116,30 +119,24 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     final newTaskList = dbList;
     final newState = state.copyWith(tasks: newTaskList);
     emit(newState);
-    // TODO
-    // final log = logger(type);
-    // log.i('task list updated');
   }
 
   Future<void> _onTaskListDeleteTask(
     TaskListDeleteTask event,
     Emitter<TaskListState> emit,
   ) async {
-    // TODO
-    // final log = logger(type);
-    // updateTaskList(type);
+    final log = logger(TaskListBloc);
+    log.i('TaskListDeleteTask event');
     await _client.deleteTask(event.id);
     int result = await _databaseHelper.deleteTask(event.id);
     if (result == 0) {
-      // log.e('error on task delete');
+      log.e('task with id=${event.id} doesn\'t exist');
     } else {
       List<TaskWidgetConfiguration> newList = state.tasks;
       newList.removeWhere((element) => element.id == event.id);
       final newState = state.copyWith(tasks: newList);
       emit(newState);
-      // TODO
-      // log.i('task deleted (id=$id)');
-      // updateTaskList(type);
+      log.i('task deleted (id=${event.id})');
     }
   }
 
@@ -147,6 +144,8 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     TaskListChangeTaskState event,
     Emitter<TaskListState> emit,
   ) async {
+    final log = logger(TaskListBloc);
+    log.i('TaskListChangeTaskState event');
     final index = state.tasks.indexWhere((element) => element.id == event.id);
 
     List<TaskWidgetConfiguration> newList = state.tasks;
@@ -157,18 +156,14 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
 
     final newState = state.copyWith(tasks: newList);
     emit(newState);
-    // TODO
-    // final log = logger(type);
-    // log.i('task[$index] isCompleted changed');
   }
 
   Future<void> _onTaskListUpdateTask(
     TaskListUpdateTask event,
     Emitter<TaskListState> emit,
   ) async {
-    // TODO
-    // final log = logger(type);
-    // log.i('task updated');
+    final log = logger(TaskListBloc);
+    log.i('TaskListUpdateTask event');
     await _databaseHelper.updateTask(event.configuration);
     final list = await _client.getTaskList();
     bool flag = false;
@@ -186,16 +181,14 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     newTaskList[index] = event.configuration;
     final newState = state.copyWith(tasks: newTaskList);
     emit(newState);
-    // NavigationManager.instance.saveTask(false);
   }
 
   Future<void> _onTaskListSaveTask(
     TaskListSaveTask event,
     Emitter<TaskListState> emit,
   ) async {
-    // TODO
-    // final log = logger(type);
-    // log.i('task saved');
+    final log = logger(TaskListBloc);
+    log.i('TaskListUpdateTask event');
     await _databaseHelper.insertTask(event.configuration);
     await _client.postTask(event.configuration);
     final newTaskList = state.tasks;

@@ -1,12 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:todo_list_shmr/core/task_repository.dart';
 import 'package:todo_list_shmr/navigation/navigation.dart';
 
-// import 'package:todo_list_shmr/navigation/navigation.dart';
-import 'package:todo_list_shmr/ui/localization/s.dart';
+import 'package:todo_list_shmr/ui/utility/localization/s.dart';
 import 'package:todo_list_shmr/ui/theme/theme.dart';
 import 'package:todo_list_shmr/ui/widgets/main_screen/main_screen_bloc.dart';
 import 'package:todo_list_shmr/ui/widgets/task_row/task_row_widget.dart';
@@ -18,35 +16,33 @@ class MainScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final model = _model;
     return BlocProvider(
       create: (_) => MainScreenCubit(TaskListVisibility.visibilityOff),
-      child: const MainScreenBody(),
+      child: const _MainScreenBody(),
     );
   }
 }
 
-class MainScreenBody extends StatefulWidget {
-  const MainScreenBody({super.key});
+class _MainScreenBody extends StatefulWidget {
+  const _MainScreenBody();
 
   @override
-  State<MainScreenBody> createState() => _MainScreenBodyState();
+  State<_MainScreenBody> createState() => _MainScreenBodyState();
 }
 
-class _MainScreenBodyState extends State<MainScreenBody> {
+class _MainScreenBodyState extends State<_MainScreenBody> {
   @override
   Widget build(BuildContext context) {
-    // final funcs = context.read<MainScreenFunctionsProvider>();
     return Scaffold(
       backgroundColor: ToDoListTheme.mainScreenScaffoldColor,
       body: const CustomScrollView(
         slivers: [
           SliverPersistentHeader(
-            delegate: CustomSliverAppBarDelegate(expandedHeight: 120),
+            delegate: _CustomSliverAppBarDelegate(expandedHeight: 120),
             pinned: true,
           ),
-          CompletedWidget(),
-          TasksWidget(),
+          _CompletedWidget(),
+          _TasksWidget(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -61,8 +57,8 @@ class _MainScreenBodyState extends State<MainScreenBody> {
   }
 }
 
-class CompletedWidget extends StatelessWidget {
-  const CompletedWidget({super.key});
+class _CompletedWidget extends StatelessWidget {
+  const _CompletedWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -120,16 +116,13 @@ class CompletedWidget extends StatelessWidget {
   }
 }
 
-class TasksWidget extends StatelessWidget {
-  const TasksWidget({super.key});
+class _TasksWidget extends StatelessWidget {
+  const _TasksWidget();
 
   @override
   Widget build(BuildContext context) {
     final bloc = context.watch<TaskListBloc>();
     final cubit = context.watch<MainScreenCubit>();
-    // final tasks = cubit.state == TaskListVisibility.visibilityOff
-    //     ? bloc.state.uncompletedTasks
-    //     : bloc.state.allTasks;
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 0, 8, 15),
@@ -181,18 +174,11 @@ class TasksWidget extends StatelessWidget {
       ),
     );
   }
-
-  // Future<void> _openTaskForm(MainScreenBloc bloc) async {
-  //   bool? update = await NavigationManager.instance.openTaskForm();
-  //   if (update != null && update) {
-  //     bloc.add(MainScreenTaskListUpdate());
-  //   }
-  // }
 }
 
-class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+class _CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
-  const CustomSliverAppBarDelegate({required this.expandedHeight});
+  const _CustomSliverAppBarDelegate({required this.expandedHeight});
 
   @override
   Widget build(
@@ -200,7 +186,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return Stack(
       fit: StackFit.passthrough,
       children: [
-        BuildAppBar(shrinkOffset: shrinkOffset, expandedHeight: expandedHeight)
+        _BuildAppBar(shrinkOffset: shrinkOffset, expandedHeight: expandedHeight)
       ],
     );
   }
@@ -217,9 +203,9 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class BuildAppBar extends StatelessWidget {
-  const BuildAppBar(
-      {super.key, required this.shrinkOffset, required this.expandedHeight});
+class _BuildAppBar extends StatelessWidget {
+  const _BuildAppBar(
+      {required this.shrinkOffset, required this.expandedHeight});
   final double shrinkOffset;
   final double expandedHeight;
 
@@ -227,7 +213,6 @@ class BuildAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final bloc = context.watch<MainScreenBloc>();
     return Material(
       color: ToDoListTheme.mainScreenAppBarColor,
       elevation: 4 * shrinkOffset / expandedHeight,
@@ -275,9 +260,7 @@ class BuildAppBar extends StatelessWidget {
                           final cubit = context.read<MainScreenCubit>();
                           cubit.switchVisibile();
                         }
-                      // bloc.add(
-                      //     MainScreenSwitchCompleted()) // model.changeTaskList(BuildAppBar)
-                      : () {},
+                      : null,
                 );
               },
             ),
@@ -287,13 +270,3 @@ class BuildAppBar extends StatelessWidget {
     );
   }
 }
-
-// class MainScreenFunctionsProvider {
-//   final void Function(MainScreenBloc bloc) onTaskForm;
-//   final void Function(String itemId, TaskWidgetConfiguration? configuration,
-//       MainScreenBloc bloc) onChangeTask;
-//   MainScreenFunctionsProvider({
-//     required this.onTaskForm,
-//     required this.onChangeTask,
-//   });
-// }

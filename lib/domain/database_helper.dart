@@ -2,7 +2,8 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:todo_list_shmr/ui/widgets/task_row/task_row_widget.dart';
+import 'package:todo_list_shmr/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._();
@@ -32,15 +33,25 @@ class DatabaseHelper {
   }
 
   void _createDb(Database db, int newVersion) async {
-    await db.execute(
-        'CREATE TABLE $taskTable($id TEXT PRIMARY KEY, $description TEXT, '
-        '$relevance INTEGER, $isCompleted INTEGER, $date TEXT)');
+    try {
+      await db.execute(
+          'CREATE TABLE $taskTable($id TEXT PRIMARY KEY, $description TEXT, '
+          '$relevance INTEGER, $isCompleted INTEGER, $date TEXT)');
+    } catch (e) {
+      final log = logger(DatabaseHelper);
+      log.e(e);
+    }
   }
 
   Future<List<Map<String, dynamic>>> getTaskMapList() async {
-    Database db = await database;
-
-    var result = await db.query(taskTable, orderBy: '$id ASC');
+    List<Map<String, dynamic>> result = [];
+    try {
+      Database db = await database;
+      result = await db.query(taskTable, orderBy: '$id ASC');
+    } catch (e) {
+      final log = logger(DatabaseHelper);
+      log.e(e);
+    }
     return result;
   }
 
@@ -57,8 +68,14 @@ class DatabaseHelper {
     if (task.date != null) {
       map[date] = task.date;
     }
-    Database db = await database;
-    var result = await db.insert(taskTable, map);
+    int result = 0;
+    try {
+      Database db = await database;
+      result = await db.insert(taskTable, map);
+    } catch (e) {
+      final log = logger(DatabaseHelper);
+      log.e(e);
+    }
     return result;
   }
 
@@ -75,28 +92,46 @@ class DatabaseHelper {
     if (task.date != null) {
       map[date] = task.date;
     }
-    var db = await database;
-    var result = await db.update(
-      taskTable,
-      map,
-      where: '$id = ?',
-      whereArgs: [task.id],
-    );
+    int result = 0;
+    try {
+      var db = await database;
+      result = await db.update(
+        taskTable,
+        map,
+        where: '$id = ?',
+        whereArgs: [task.id],
+      );
+    } catch (e) {
+      final log = logger(DatabaseHelper);
+      log.e(e);
+    }
     return result;
   }
 
   Future<int> deleteTask(String id) async {
-    var db = await database;
-    int result =
-        await db.rawDelete('DELETE FROM $taskTable WHERE ${this.id} = \'$id\'');
+    int result = 0;
+    try {
+      var db = await database;
+      result = await db
+          .rawDelete('DELETE FROM $taskTable WHERE ${this.id} = \'$id\'');
+    } catch (e) {
+      final log = logger(DatabaseHelper);
+      log.e(e);
+    }
     return result;
   }
 
   Future<int?> getCount() async {
-    Database db = await database;
-    List<Map<String, dynamic>> x =
-        await db.rawQuery('SELECT COUNT (*) from $taskTable');
-    int? result = Sqflite.firstIntValue(x);
+    int? result;
+    try {
+      Database db = await database;
+      List<Map<String, dynamic>> x =
+          await db.rawQuery('SELECT COUNT (*) from $taskTable');
+      result = Sqflite.firstIntValue(x);
+    } catch (e) {
+      final log = logger(DatabaseHelper);
+      log.e(e);
+    }
     return result;
   }
 
