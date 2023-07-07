@@ -1,6 +1,6 @@
 This is a to-do list
 Link to the APK:
-[https://drive.google.com/drive/folders/1Vuo4CxhAh_s7tFe8DktpIjsKs4eglk4b?usp=sharing](https://drive.google.com/drive/folders/1h_SVqZAJSLDYvO_lfMAPBq_nAplMfk3Q?usp=sharing)
+https://drive.google.com/drive/folders/1chr1qPK4ksdezlzbj8tBLyYcJpVNXsFQ?usp=sharing
 
 Implemented features:
 - light and dark themes depending on the application settings
@@ -13,7 +13,7 @@ Implemented features:
   
 Это список дел
 Ссылка на апк:
-[https://drive.google.com/drive/folders/1Vuo4CxhAh_s7tFe8DktpIjsKs4eglk4b?usp=sharing](https://drive.google.com/drive/folders/1h_SVqZAJSLDYvO_lfMAPBq_nAplMfk3Q?usp=sharing)
+https://drive.google.com/drive/folders/1chr1qPK4ksdezlzbj8tBLyYcJpVNXsFQ?usp=sharing
 
 Реализованные фичи:
  - светлая и тёмная темы в зависимости от настроек приложения
