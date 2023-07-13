@@ -1,12 +1,19 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:todo_list_shmr/domain/database_helper.dart';
-import 'package:todo_list_shmr/domain/api_client.dart';
-import 'package:todo_list_shmr/task_model/task_configuration.dart';
-import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
+import 'package:todo_list_shmr/common/domain/database_helper.dart';
+import 'package:todo_list_shmr/common/domain/api_client.dart';
+import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/common/utility/logger/logging.dart';
 
 abstract class TaskListEvent {}
+
+class TaskListInit extends TaskListEvent {}
 
 class TaskListUpdate extends TaskListEvent {}
 
@@ -61,8 +68,8 @@ class TaskListState {
       identical(this, other) ||
       other is TaskListState &&
           runtimeType == other.runtimeType &&
-          tasks == other.tasks &&
-          completedTasks == other.completedTasks;
+          completedTasks == other.completedTasks &&
+          tasks == other.tasks;
 
   @override
   int get hashCode => tasks.hashCode ^ completedTasks.hashCode;
@@ -78,13 +85,24 @@ class TaskListState {
 }
 
 class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
-  final _client = ApiClient();
-  final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
+  final ApiClient _client;
+  final DatabaseHelper _databaseHelper;
+  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+  FirebaseAnalytics get analytics => FirebaseAnalytics.instance;
+  Color get redColor => Color.fromARGB(
+        _remoteConfig.getInt('a_color'),
+        _remoteConfig.getInt('r_color'),
+        _remoteConfig.getInt('g_color'),
+        _remoteConfig.getInt('b_color'),
+      );
 
-  TaskListBloc(TaskListState initialState) : super(initialState) {
+  TaskListBloc(TaskListState initialState, this._client, this._databaseHelper)
+      : super(initialState) {
     on<TaskListEvent>(
       (event, emit) async {
-        if (event is TaskListUpdate) {
+        if (event is TaskListInit) {
+          await _onTaskListInit();
+        } else if (event is TaskListUpdate) {
           await _onTaskListUpdate(event, emit);
         } else if (event is TaskListDeleteTask) {
           await _onTaskListDeleteTask(event, emit);
@@ -101,7 +119,35 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
       },
       transformer: sequential(),
     );
+    add(TaskListInit());
     add(TaskListUpdate());
+  }
+
+  Future<void> _onTaskListInit() async {
+    final log = logger(TaskListBloc);
+    log.i('Firebase init crashlytics');
+    FlutterError.onError = (errorDetails) {
+      log.e('Caught error in FlutterError.onError');
+      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    };
+    PlatformDispatcher.instance.onError = (error, stack) {
+      log.e('Caught error in PlatformDispatcher.onError');
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+    log.i('Crashlytics initialized');
+    log.i('Set up remote config');
+    // _remoteConfig.setDefaults({'red_color': 0xFF000000 /*0xFFFF3B30*/});
+    // await _remoteConfig.setDefaults({'a_color': 255 /*0xFFFF3B30*/});
+    // await _remoteConfig.setDefaults({'r_color': 121 /*0xFFFF3B30*/});
+    // await _remoteConfig.setDefaults({'g_color': 60 /*0xFFFF3B30*/});
+    // await _remoteConfig.setDefaults({'b_color': 216 /*0xFFFF3B30*/});
+    // await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+    //   fetchTimeout: const Duration(minutes: 1),
+    //   minimumFetchInterval: const Duration(hours: 1),
+    // ));
+    await _remoteConfig.fetchAndActivate();
+    log.i('Remote config activated');
   }
 
   Future<void> _onTaskListUpdate(
@@ -111,7 +157,6 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     final log = logger(TaskListBloc);
     log.i('TaskListUpdate event');
     final clientList = await _client.getTaskList();
-    await _databaseHelper.initializeDatabase();
     final dbList = await _databaseHelper.getTaskList();
     if (clientList != dbList) {
       await _client.patchTaskList(dbList);
@@ -150,10 +195,8 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
 
     List<TaskWidgetConfiguration> newList = state.tasks;
     newList[index].isCompleted = !newList[index].isCompleted;
-
     await _databaseHelper.updateTask(newList[index]);
     await _client.updateTask(newList[index]);
-
     final newState = state.copyWith(tasks: newList);
     emit(newState);
   }

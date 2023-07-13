@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
+import 'package:todo_list_shmr/common/utility/logger/logging.dart';
 import 'package:todo_list_shmr/ui/widgets/main_screen/main_screen_widget.dart';
 import 'package:todo_list_shmr/ui/widgets/task_form/task_form_widget.dart';
 import 'navigation_state.dart';

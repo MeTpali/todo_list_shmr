@@ -1,9 +1,11 @@
-import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
-import 'package:todo_list_shmr/task_model/task_configuration.dart';
-import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:todo_list_shmr/common/converters/db_convert.dart';
+import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/common/utility/logger/logging.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._();
@@ -15,6 +17,7 @@ class DatabaseHelper {
   String description = 'description';
   String relevance = 'relevance';
   String date = 'date';
+  DatabaseHelper();
 
   DatabaseHelper._();
 
@@ -56,18 +59,7 @@ class DatabaseHelper {
   }
 
   Future<int> insertTask(TaskWidgetConfiguration task) async {
-    Map<String, dynamic> map = {};
-    map[id] = task.id;
-    map[description] = task.description;
-    map[relevance] = task.relevance == Relevance.none
-        ? 0
-        : task.relevance == Relevance.low
-            ? 1
-            : 2;
-    map[isCompleted] = task.isCompleted ? 1 : 0;
-    if (task.date != null) {
-      map[date] = task.date;
-    }
+    Map<String, dynamic> map = DatabaseDataConvert.mapFromTask(task);
     int result = 0;
     try {
       Database db = await database;
@@ -80,18 +72,7 @@ class DatabaseHelper {
   }
 
   Future<int> updateTask(TaskWidgetConfiguration task) async {
-    Map<String, dynamic> map = {};
-    map[id] = task.id;
-    map[description] = task.description;
-    map[relevance] = task.relevance == Relevance.none
-        ? 0
-        : task.relevance == Relevance.low
-            ? 1
-            : 2;
-    map[isCompleted] = task.isCompleted ? 1 : 0;
-    if (task.date != null) {
-      map[date] = task.date;
-    }
+    Map<String, dynamic> map = DatabaseDataConvert.mapFromTask(task);
     int result = 0;
     try {
       var db = await database;
@@ -137,23 +118,6 @@ class DatabaseHelper {
 
   Future<List<TaskWidgetConfiguration>> getTaskList() async {
     var taskMapList = await getTaskMapList();
-    int count = taskMapList.length;
-
-    List<TaskWidgetConfiguration> taskList = [];
-    for (int i = 0; i < count; i++) {
-      TaskWidgetConfiguration curTask = TaskWidgetConfiguration(
-        id: taskMapList[i][id],
-        isCompleted: taskMapList[i][isCompleted] == 1 ? true : false,
-        relevance: taskMapList[i][relevance] == 0
-            ? Relevance.none
-            : taskMapList[i][relevance] == 1
-                ? Relevance.low
-                : Relevance.high,
-        description: taskMapList[i][description],
-        date: taskMapList[i][date],
-      );
-      taskList.add(curTask);
-    }
-    return taskList;
+    return DatabaseDataConvert.taskListFromDatabase(taskMapList);
   }
 }

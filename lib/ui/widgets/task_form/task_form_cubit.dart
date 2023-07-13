@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_list_shmr/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
 import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
 
 import 'package:todo_list_shmr/ui/utility/date.dart';

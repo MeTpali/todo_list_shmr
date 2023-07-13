@@ -2,10 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:todo_list_shmr/task_model/task_configuration.dart';
+// import 'package:todo_list_shmr/common/converters/server_convert.dart';
+import 'package:todo_list_shmr/common/core/task_repository.dart';
+import 'package:todo_list_shmr/common/navigation/navigation.dart';
+import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
 
-import 'package:todo_list_shmr/core/task_repository.dart';
-import 'package:todo_list_shmr/navigation/navigation.dart';
 import 'package:todo_list_shmr/ui/theme/theme.dart';
 
 class TaskWidget extends StatelessWidget {
@@ -31,9 +32,17 @@ class TaskWidget extends StatelessWidget {
         key: ValueKey(configuration.id),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.startToEnd) {
+            bloc.analytics.logEvent(
+              name: 'complete_task',
+              parameters: {'id': configuration.id},
+            );
             bloc.add(TaskListChangeTaskState(id: configuration.id));
             return false;
           } else {
+            await bloc.analytics.logEvent(
+              name: 'delete_from_main_screen',
+              parameters: {'id': configuration.id},
+            );
             bloc.add(TaskListDeleteTask(id: configuration.id));
             return false;
           }
@@ -96,6 +105,7 @@ class _TaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.watch<TaskListBloc>();
     return Padding(
       padding: const EdgeInsets.fromLTRB(19, 15, 0, 5),
       child: Row(
@@ -108,7 +118,7 @@ class _TaskWidget extends StatelessWidget {
             color: configuration.isCompleted
                 ? ToDoListTheme.taskRowCheckBoxCompletedColor
                 : configuration.relevance == Relevance.high
-                    ? ToDoListTheme.taskRowCheckBoxHighRelevanceColor
+                    ? bloc.redColor
                     : ToDoListTheme.taskRowCheckBoxSimpleColor,
           ),
           SizedBox(
@@ -172,7 +182,6 @@ class _TaskWidget extends StatelessWidget {
             padding: const EdgeInsets.only(right: 18),
             constraints: const BoxConstraints(),
             onPressed: () {
-              final bloc = context.read<TaskListBloc>();
               final index = bloc.state.tasks
                   .indexWhere((element) => element.id == configuration.id);
               GetIt.I<NavigationManager>().openTaskForm(index);

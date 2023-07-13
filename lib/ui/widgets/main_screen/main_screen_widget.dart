@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:todo_list_shmr/core/task_repository.dart';
-import 'package:todo_list_shmr/navigation/navigation.dart';
+import 'package:todo_list_shmr/common/core/task_repository.dart';
+import 'package:todo_list_shmr/common/navigation/navigation.dart';
 
 import 'package:todo_list_shmr/ui/utility/localization/s.dart';
 import 'package:todo_list_shmr/ui/theme/theme.dart';
-import 'package:todo_list_shmr/ui/widgets/main_screen/main_screen_bloc.dart';
+import 'package:todo_list_shmr/ui/widgets/main_screen/main_screen_cubit.dart';
 import 'package:todo_list_shmr/ui/widgets/task_row/task_row_widget.dart';
 
 class MainScreenWidget extends StatelessWidget {
@@ -33,6 +33,7 @@ class _MainScreenBody extends StatefulWidget {
 class _MainScreenBodyState extends State<_MainScreenBody> {
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<TaskListBloc>();
     return Scaffold(
       backgroundColor: ToDoListTheme.mainScreenScaffoldColor,
       body: const CustomScrollView(
@@ -46,7 +47,10 @@ class _MainScreenBodyState extends State<_MainScreenBody> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: GetIt.I<NavigationManager>().openTaskForm,
+        onPressed: () {
+          bloc.analytics.logEvent(name: 'open_task_form');
+          GetIt.I<NavigationManager>().openTaskForm;
+        },
         backgroundColor: ToDoListTheme.floatingActionButtonBackgroundColor,
         child: Icon(
           Icons.add,
@@ -151,7 +155,10 @@ class _TasksWidget extends StatelessWidget {
                 },
               ),
               TextButton(
-                onPressed: GetIt.I<NavigationManager>().openTaskForm,
+                onPressed: () {
+                  bloc.analytics.logEvent(name: 'open_task_form');
+                  GetIt.I<NavigationManager>().openTaskForm;
+                },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 50),
                   child: Row(

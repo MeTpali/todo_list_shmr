@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:todo_list_shmr/core/task_repository.dart';
-import 'package:todo_list_shmr/navigation/navigation.dart';
-import 'package:todo_list_shmr/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/common/core/task_repository.dart';
+import 'package:todo_list_shmr/common/navigation/navigation.dart';
+import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
 import 'package:todo_list_shmr/ui/utility/localization/s.dart';
 import 'package:todo_list_shmr/ui/theme/theme.dart';
 import 'package:todo_list_shmr/ui/widgets/task_form/task_form_cubit.dart';
@@ -77,13 +77,17 @@ class _TaskFormBodyState extends State<_TaskFormBody> {
             onPressed: cubit.state.configuration.description.isNotEmpty
                 ? cubit.state.isChanging
                     ? () {
+                        bloc.analytics.logEvent(name: 'save_task');
                         bloc.add(TaskListUpdateTask(
                             configuration: cubit.state.configuration));
+                        bloc.analytics.logEvent(name: 'return_to_main_screen');
                         GetIt.I<NavigationManager>().openMainScreen();
                       }
                     : () {
+                        bloc.analytics.logEvent(name: 'save_task');
                         bloc.add(TaskListSaveTask(
                             configuration: cubit.state.configuration));
+                        bloc.analytics.logEvent(name: 'return_to_main_screen');
                         GetIt.I<NavigationManager>().openMainScreen();
                       }
                 : null,
@@ -401,6 +405,10 @@ class _DeleteWidget extends StatelessWidget {
       child: TextButton(
         onPressed: cubit.state.isChanging
             ? () {
+                bloc.analytics.logEvent(
+                  name: 'delete_from_task_form',
+                  parameters: {'id': cubit.state.configuration.id},
+                );
                 bloc.add(TaskListDeleteTask(id: cubit.state.configuration.id));
                 GetIt.I<NavigationManager>().openMainScreen();
               }
