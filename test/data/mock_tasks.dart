@@ -1,7 +1,7 @@
-import 'package:todo_list_shmr/common/core/task_repository.dart';
-import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/core/task_repository.dart';
+import 'package:todo_list_shmr/task_model/task_config.dart';
 
-final TaskWidgetConfiguration firstTask = TaskWidgetConfiguration(
+const TaskWidgetConfiguration firstTask = TaskWidgetConfiguration(
   id: '48450adf-9103-44c9-a5f7-1d838c54caa1',
   description: 'First task',
   isCompleted: true,
@@ -9,7 +9,7 @@ final TaskWidgetConfiguration firstTask = TaskWidgetConfiguration(
   date: null,
 );
 
-final TaskWidgetConfiguration secondTask = TaskWidgetConfiguration(
+const TaskWidgetConfiguration secondTask = TaskWidgetConfiguration(
   id: '6a9e9454-efce-49fa-8bcf-137bd66653a2',
   description: 'Second task',
   isCompleted: false,
@@ -17,7 +17,7 @@ final TaskWidgetConfiguration secondTask = TaskWidgetConfiguration(
   date: '1 марта 2023',
 );
 
-final TaskWidgetConfiguration thirdTask = TaskWidgetConfiguration(
+const TaskWidgetConfiguration thirdTask = TaskWidgetConfiguration(
   id: '086bc8a2-255d-4e9d-bb6f-456c5e6fe9a3',
   description: 'Third task',
   isCompleted: true,
@@ -25,7 +25,7 @@ final TaskWidgetConfiguration thirdTask = TaskWidgetConfiguration(
   date: null,
 );
 
-final TaskWidgetConfiguration secondTaskChanged = TaskWidgetConfiguration(
+const TaskWidgetConfiguration secondTaskChanged = TaskWidgetConfiguration(
   id: '6a9e9454-efce-49fa-8bcf-137bd66653a2',
   description: 'Second task changed',
   isCompleted: false,
@@ -33,7 +33,7 @@ final TaskWidgetConfiguration secondTaskChanged = TaskWidgetConfiguration(
   date: '2 марта 2023',
 );
 
-final TaskWidgetConfiguration thirdTaskChanged = TaskWidgetConfiguration(
+const TaskWidgetConfiguration thirdTaskChanged = TaskWidgetConfiguration(
   id: '086bc8a2-255d-4e9d-bb6f-456c5e6fe9a3',
   description: 'Third task',
   isCompleted: false,

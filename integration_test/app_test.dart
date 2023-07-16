@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
+import 'package:todo_list_shmr/utility/logger/logging.dart';
 import 'test_main.dart' as test_app;
 
 void main() async {

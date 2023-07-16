@@ -2,10 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-// import 'package:todo_list_shmr/common/converters/server_convert.dart';
-import 'package:todo_list_shmr/common/core/task_repository.dart';
-import 'package:todo_list_shmr/common/navigation/navigation.dart';
-import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/core/task_repository.dart';
+import 'package:todo_list_shmr/navigation/navigation.dart';
+import 'package:todo_list_shmr/task_model/task_config.dart';
 
 import 'package:todo_list_shmr/ui/theme/theme.dart';
 
@@ -36,18 +35,20 @@ class TaskWidget extends StatelessWidget {
               name: 'complete_task',
               parameters: {'id': configuration.id},
             );
-            bloc.add(TaskListChangeTaskState(id: configuration.id));
+            Future.delayed(const Duration(milliseconds: 200)).then((value) =>
+                bloc.add(TaskListChangeTaskState(id: configuration.id)));
             return false;
           } else {
             await bloc.analytics.logEvent(
               name: 'delete_from_main_screen',
               parameters: {'id': configuration.id},
             );
-            bloc.add(TaskListDeleteTask(id: configuration.id));
+            Future.delayed(const Duration(milliseconds: 200)).then(
+                (value) => bloc.add(TaskListDeleteTask(id: configuration.id)));
             return false;
           }
         },
-        movementDuration: Duration.zero,
+        movementDuration: const Duration(milliseconds: 200),
         child: _TaskWidget(configuration: configuration),
       ),
     );
@@ -122,27 +123,42 @@ class _TaskWidget extends StatelessWidget {
                     : ToDoListTheme.taskRowCheckBoxSimpleColor,
           ),
           SizedBox(
-            width: configuration.relevance == Relevance.high ? 10 : 15,
+            width: configuration.relevance == Relevance.high
+                ? 10
+                : configuration.relevance == Relevance.low
+                    ? 5
+                    : 15,
           ),
-          if (configuration.relevance == Relevance.high)
-            const SizedBox(
-              width: 10,
+          if (configuration.relevance == Relevance.low)
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
               child: Icon(
-                Icons.priority_high_rounded,
-                color: Colors.red,
+                Icons.south_rounded,
+                color: ToDoListTheme.taskRowLowRelevanceColor,
+                size: 20,
               ),
             ),
-          if (configuration.relevance == Relevance.high)
-            const Icon(
-              Icons.priority_high_rounded,
-              color: Colors.red,
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: RichText(
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                children: <TextSpan>[
+                  if (configuration.relevance == Relevance.high)
+                    TextSpan(
+                      text: '!! ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        height: 1,
+                        color: bloc.redColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                ],
+              ),
             ),
-          if (configuration.relevance == Relevance.low)
-            Icon(
-              Icons.arrow_downward_rounded,
-              color: ToDoListTheme.taskRowLowRelevanceColor,
-              size: 20,
-            ),
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +197,8 @@ class _TaskWidget extends StatelessWidget {
           IconButton(
             padding: const EdgeInsets.only(right: 18),
             constraints: const BoxConstraints(),
-            onPressed: () {
+            onPressed: () async {
+              await bloc.analytics.logEvent(name: 'open_task_form');
               final index = bloc.state.tasks
                   .indexWhere((element) => element.id == configuration.id);
               GetIt.I<NavigationManager>().openTaskForm(index);

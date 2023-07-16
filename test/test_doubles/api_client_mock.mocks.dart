@@ -6,9 +6,8 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:todo_list_shmr/common/domain/api_client.dart' as _i2;
-import 'package:todo_list_shmr/common/task_model/task_configuration.dart'
-    as _i4;
+import 'package:todo_list_shmr/domain/api_client.dart' as _i2;
+import 'package:todo_list_shmr/task_model/task_config.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

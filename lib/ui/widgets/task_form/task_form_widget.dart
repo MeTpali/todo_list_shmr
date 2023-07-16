@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:todo_list_shmr/common/core/task_repository.dart';
-import 'package:todo_list_shmr/common/navigation/navigation.dart';
-import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
-import 'package:todo_list_shmr/ui/utility/localization/s.dart';
+import 'package:todo_list_shmr/task_model/task_config.dart';
+import 'package:todo_list_shmr/utility/localization/s.dart';
+import 'package:uuid/uuid.dart';
+import 'package:todo_list_shmr/core/task_repository.dart';
+import 'package:todo_list_shmr/navigation/navigation.dart';
 import 'package:todo_list_shmr/ui/theme/theme.dart';
 import 'package:todo_list_shmr/ui/widgets/task_form/task_form_cubit.dart';
 
@@ -17,6 +18,7 @@ class TaskFormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const uuid = Uuid();
     return BlocProvider(
       create: (_) => TaskFormCubit(
         taskId != null
@@ -26,7 +28,13 @@ class TaskFormWidget extends StatelessWidget {
                 isChanging: true,
               )
             : TaskFormState(
-                configuration: TaskWidgetConfiguration.initial(),
+                configuration: TaskWidgetConfiguration(
+                  id: uuid.v4(),
+                  isCompleted: false,
+                  relevance: Relevance.none,
+                  description: '',
+                  date: null,
+                ),
                 isChanging: false,
               ),
       ),
@@ -76,18 +84,22 @@ class _TaskFormBodyState extends State<_TaskFormBody> {
           TextButton(
             onPressed: cubit.state.configuration.description.isNotEmpty
                 ? cubit.state.isChanging
-                    ? () {
-                        bloc.analytics.logEvent(name: 'save_task');
+                    ? () async {
+                        cubit.trimDescription();
+                        await bloc.analytics.logEvent(name: 'save_task');
                         bloc.add(TaskListUpdateTask(
                             configuration: cubit.state.configuration));
-                        bloc.analytics.logEvent(name: 'return_to_main_screen');
+                        await bloc.analytics
+                            .logEvent(name: 'return_to_main_screen');
                         GetIt.I<NavigationManager>().openMainScreen();
                       }
-                    : () {
-                        bloc.analytics.logEvent(name: 'save_task');
+                    : () async {
+                        cubit.trimDescription();
+                        await bloc.analytics.logEvent(name: 'save_task');
                         bloc.add(TaskListSaveTask(
                             configuration: cubit.state.configuration));
-                        bloc.analytics.logEvent(name: 'return_to_main_screen');
+                        await bloc.analytics
+                            .logEvent(name: 'return_to_main_screen');
                         GetIt.I<NavigationManager>().openMainScreen();
                       }
                 : null,
@@ -199,6 +211,7 @@ class _RelevancePoPup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<TaskListBloc>();
     final cubit = context.watch<TaskFormCubit>();
     return Theme(
       data: Theme.of(context).copyWith(
@@ -230,22 +243,29 @@ class _RelevancePoPup extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(
-                  width: 10,
-                  child: Icon(
-                    Icons.priority_high_rounded,
-                    color: Colors.red,
-                    size: 16,
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: RichText(
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: '!! ',
+                          style: TextStyle(
+                            fontSize: 20,
+                            height: 1,
+                            color: bloc.redColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const Icon(
-                  Icons.priority_high_rounded,
-                  color: Colors.red,
-                  size: 16,
                 ),
                 Text(
                   S.of(context).get("high"),
-                  style: const TextStyle(color: Colors.red),
+                  style: TextStyle(color: bloc.redColor),
                 ),
               ],
             ),
@@ -268,28 +288,31 @@ class _RelevancePoPup extends StatelessWidget {
                       ),
                     )
                   : Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(
-                          height: 20,
-                          width: 10,
-                          child: Icon(
-                            Icons.priority_high_rounded,
-                            color: Colors.red,
-                            size: 18,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                          child: Icon(
-                            Icons.priority_high_rounded,
-                            color: Colors.red,
-                            size: 18,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 0),
+                          child: RichText(
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: '!! ',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    height: 1,
+                                    color: bloc.redColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Text(
-                          S.of(context).get('high'),
-                          style: const TextStyle(color: Colors.red),
+                          S.of(context).get("high"),
+                          style: TextStyle(color: bloc.redColor),
                         ),
                       ],
                     ),
@@ -404,8 +427,8 @@ class _DeleteWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6),
       child: TextButton(
         onPressed: cubit.state.isChanging
-            ? () {
-                bloc.analytics.logEvent(
+            ? () async {
+                await bloc.analytics.logEvent(
                   name: 'delete_from_task_form',
                   parameters: {'id': cubit.state.configuration.id},
                 );

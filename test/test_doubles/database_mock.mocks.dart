@@ -7,9 +7,8 @@ import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:sqflite/sqflite.dart' as _i2;
-import 'package:todo_list_shmr/common/domain/database_helper.dart' as _i3;
-import 'package:todo_list_shmr/common/task_model/task_configuration.dart'
-    as _i5;
+import 'package:todo_list_shmr/domain/database_helper.dart' as _i3;
+import 'package:todo_list_shmr/task_model/task_config.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

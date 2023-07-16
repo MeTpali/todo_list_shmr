@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
+import 'package:todo_list_shmr/utility/logger/logging.dart';
 
 enum TaskListVisibility { visibilityOn, visibilityOff }
 

@@ -1,6 +1,6 @@
-import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
+import 'package:todo_list_shmr/task_model/task_config.dart';
 
-final TaskWidgetConfiguration mockDBTask = TaskWidgetConfiguration(
+const TaskWidgetConfiguration mockDBTask = TaskWidgetConfiguration(
   id: '48450adf-9103-44c9-a5f7-1d838c54caa1',
   description: 'mock task',
   isCompleted: true,
@@ -8,7 +8,7 @@ final TaskWidgetConfiguration mockDBTask = TaskWidgetConfiguration(
   date: '1 марта 2021',
 );
 
-final TaskWidgetConfiguration mockDBTask2 = TaskWidgetConfiguration(
+const TaskWidgetConfiguration mockDBTask2 = TaskWidgetConfiguration(
   id: '6a9e9454-efce-49fa-8bcf-137bd66653a2',
   description: 'second task',
   isCompleted: false,

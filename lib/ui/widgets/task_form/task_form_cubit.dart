@@ -1,8 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_list_shmr/common/task_model/task_configuration.dart';
-import 'package:todo_list_shmr/ui/utility/logger/logging.dart';
-
-import 'package:todo_list_shmr/ui/utility/date.dart';
+import 'package:todo_list_shmr/task_model/task_config.dart';
+import 'package:todo_list_shmr/utility/date.dart';
+import 'package:todo_list_shmr/utility/logger/logging.dart';
 
 class TaskFormState {
   TaskWidgetConfiguration configuration;
@@ -64,5 +63,14 @@ class TaskFormCubit extends Cubit<TaskFormState> {
       final newConfig = state.configuration.copyWith(date: null);
       emit(state.copyWith(configuration: newConfig));
     }
+  }
+
+  void trimDescription() {
+    final log = logger(TaskFormCubit);
+    log.i('trim description');
+    final newConfig = state.configuration
+        .copyWith(description: state.configuration.description.trim());
+    final newState = state.copyWith(configuration: newConfig);
+    emit(newState);
   }
 }

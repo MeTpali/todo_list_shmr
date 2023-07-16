@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:todo_list_shmr/common/converters/db_convert.dart';
-import 'package:todo_list_shmr/common/converters/server_convert.dart';
-import 'package:todo_list_shmr/common/core/task_repository.dart';
-import 'package:todo_list_shmr/common/domain/api_client.dart';
-import 'package:todo_list_shmr/common/domain/database_helper.dart';
+import 'package:todo_list_shmr/utility/converters/db_convert.dart';
+import 'package:todo_list_shmr/utility/converters/server_convert.dart';
+import 'package:todo_list_shmr/core/task_repository.dart';
+import 'package:todo_list_shmr/domain/api_client.dart';
+import 'package:todo_list_shmr/domain/database_helper.dart';
 
 import 'data/mock_db_converters.dart';
 import 'data/mock_server_converters.dart';

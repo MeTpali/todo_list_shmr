@@ -56,6 +56,24 @@ android {
         versionName flutterVersionName
     }
 
+    flavorDimensions "app"
+
+    productFlavors {
+        atesting {
+            dimension "app"
+            applicationId "com.example.todo_list_shmr.testing"
+            versionCode 1
+            versionName "1.0"
+        }
+
+        prod {
+            dimension "app"
+            applicationId "com.example.todo_list_shmr"
+            versionCode 1
+            versionName "1.0"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
