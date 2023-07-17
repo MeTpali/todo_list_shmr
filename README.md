@@ -47,13 +47,9 @@ https://drive.google.com/drive/folders/112qPSG7wvW7ORzeAbmsGOV214kVOMalg?usp=sha
 
 | Firebase screenshots                                                                                      |
 | ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/08fc7d5c-c85d-4201-862b-fedda8eb1b25) | 
-| --------------------------------------------------------------------------------------------------------- |
 | ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/4c67d0fc-69a0-4a74-a444-f38d23552822) |
-| --------------------------------------------------------------------------------------------------------- |
 | ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/1995722b-ca1a-4b3a-b4af-a24624786039) |
-| --------------------------------------------------------------------------------------------------------- |
 | ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/685d777c-16f5-4c62-ab7f-94fb8e196b01) |
-| --------------------------------------------------------------------------------------------------------- |
 | ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/c81b8a7f-86a5-4ccb-b576-dac4a121b28e) |
 
 
