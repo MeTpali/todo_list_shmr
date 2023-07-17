@@ -45,13 +45,9 @@ https://drive.google.com/drive/folders/112qPSG7wvW7ORzeAbmsGOV214kVOMalg?usp=sha
 | ![фото 1](https://github.com/MeTpali/todoList/assets/108015452/1dcf1f4d-9392-417a-bdca-751fee4293ee) | ![фото 2](https://github.com/MeTpali/todoList/assets/108015452/f5ae970c-e059-4624-aeb1-5d11e56dbfda)  | ![фото 3](https://github.com/MeTpali/todoList/assets/108015452/3aed0592-c3dd-41d8-850b-bfee198faa4b)  | ![фото 4](https://github.com/MeTpali/todoList/assets/108015452/96232f10-1cc2-4349-8f3d-bed3c5233732)  |
 
 
-| Firebase screenshots                                                                                      |
-| ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/08fc7d5c-c85d-4201-862b-fedda8eb1b25) | 
-| ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/4c67d0fc-69a0-4a74-a444-f38d23552822) |
-| ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/1995722b-ca1a-4b3a-b4af-a24624786039) |
-| ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/685d777c-16f5-4c62-ab7f-94fb8e196b01) |
-| ![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/c81b8a7f-86a5-4ccb-b576-dac4a121b28e) |
-
-
-
-
+Firebase screenshots
+![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/08fc7d5c-c85d-4201-862b-fedda8eb1b25)
+![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/4c67d0fc-69a0-4a74-a444-f38d23552822)
+![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/1995722b-ca1a-4b3a-b4af-a24624786039)
+![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/685d777c-16f5-4c62-ab7f-94fb8e196b01)
+![image](https://github.com/MeTpali/todo_list_shmr/assets/108015452/c81b8a7f-86a5-4ccb-b576-dac4a121b28e)
