@@ -1,6 +1,8 @@
 This is a to-do list
 Links to the APK for prod and testing:
 https://drive.google.com/drive/folders/112qPSG7wvW7ORzeAbmsGOV214kVOMalg?usp=sharing
+Run prod flavor by command: flutter run --flavor prod -t lib/main_prod.dart
+Run dev flavor by command: flutter run --flavor dev -t lib/main_dev.dart
 For a more detailed check of Firebase, if you need one, write to tg @MeTpa_li
 
 Implemented features:
@@ -22,6 +24,8 @@ Implemented features:
 Это список дел
 Ссылки на апк для тестов и прода:
 https://drive.google.com/drive/folders/112qPSG7wvW7ORzeAbmsGOV214kVOMalg?usp=sharing
+Команда, чтобы запустить прод версию: flutter run --flavor prod -t lib/main_prod.dart
+Команда, чтобы запустить тестовую версию: flutter run --flavor dev -t lib/main_dev.dart
 Для более подробной проверки Firebase, если такова нужна - пишите в тг @MeTpa_li
 
 Реализованные фичи:
