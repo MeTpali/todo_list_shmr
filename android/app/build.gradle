@@ -59,16 +59,16 @@ android {
     flavorDimensions "app"
 
     productFlavors {
-        atesting {
+        dev {
             dimension "app"
-            applicationId "com.example.todo_list_shmr.testing"
+            applicationId "com.example.todo_list_shmr.dev"
             versionCode 1
             versionName "1.0"
         }
 
         prod {
             dimension "app"
-            applicationId "com.example.todo_list_shmr"
+            applicationId "com.example.todo_list_shmr.prod"
             versionCode 1
             versionName "1.0"
         }

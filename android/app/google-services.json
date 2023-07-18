@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:861402095166:android:183878e64ec4fb99ad3b6f",
         "android_client_info": {
-          "package_name": "com.example.todo_list_shmr.testing"
+          "package_name": "com.example.todo_list_shmr.prod"
         }
       },
       "oauth_client": [
@@ -45,7 +45,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:861402095166:android:183878e64ec4fb99ad3b6f",
         "android_client_info": {
-          "package_name": "com.example.todo_list_shmr"
+          "package_name": "com.example.todo_list_shmr.dev"
         }
       },
       "oauth_client": [

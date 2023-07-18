@@ -22,16 +22,24 @@
         //     "flutterMode": "release"
         // }
         {
-            "name": "testing_flavor",
-            "program": "C:/Users/tarte/VSCode_flutter_projects/todo_list_shmr/lib/main_testing.dart",
+            "name": "dev",
+            "program": "C:/Users/tarte/VSCode_flutter_projects/todo_list_shmr/lib/main_dev.dart",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
         },
         {
-            "name": "prod_flavor",
+            "name": "prod",
             "program": "C:/Users/tarte/VSCode_flutter_projects/todo_list_shmr/lib/main_prod.dart",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         }
     ]
 }
